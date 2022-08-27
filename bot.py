@@ -1,5 +1,4 @@
 import os
-
 import sys, subprocess
 
 subprocess.check_call([sys.executable, "-m", "pip", "install", "-U", "discord-py-interactions"])
@@ -10,6 +9,7 @@ load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
 PREFIXO_NORMAL = os.getenv("PREFIXO_NORMAL")
+PREFIXO_RPG = os.getenv("PREFIXO_RPG")
 GUILD_ID = int(os.getenv("GUILD_ID"))
 
 comprimento = len(PREFIXO_NORMAL)
@@ -17,22 +17,15 @@ clear_prefixed_lenth = len((PREFIXO_NORMAL + "clear"))
 
 client = interactions.Client(TOKEN, intents=interactions.Intents.DEFAULT | interactions.Intents.GUILD_MESSAGE_CONTENT)
 
+#on ready
 @client.event
 async def on_ready():
     print(f'{client.me.name} has connected to Discord!')
 
-@client.command(
-    name="roberto",
-    description="Roberto carlos",
-    scope=GUILD_ID,
-)
-async def my_first_command(ctx: interactions.CommandContext):
-    await ctx.send("ROBERTO" , ephemeral=True)
-
-
 
 @client.event
 async def on_message_create(message):
+	# Comandos com o prefixo geral ( : )
 	if message.content[0:comprimento] == PREFIXO_NORMAL:
 		if message.content[comprimento: ] == "ping":
 			channel = await message.get_channel()
@@ -49,6 +42,15 @@ async def on_message_create(message):
 			channel = await message.get_channel()
 			await channel.send("hey dirtbag")
 			await message.delete()
+	# Comandos com o prefixo de rpg ( ? )
 
+#Slash Commands
+@client.command(
+    name="ping",
+    description="Devolve a latência da api do bot",
+    scope=GUILD_ID,
+)
+async def my_first_command(ctx: interactions.CommandContext):
+    await ctx.send(f'O bot está com uma latência de {(round(client.latency, 3)*1000)} ms')
 
 client.start()
