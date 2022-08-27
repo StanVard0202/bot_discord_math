@@ -54,3 +54,5 @@ async def my_first_command(ctx: interactions.CommandContext):
     await ctx.send(f'O bot está com uma latência de {(round(client.latency, 3)*1000)} ms')
 
 client.start()
+
+
