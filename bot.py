@@ -1,7 +1,7 @@
 import os
 import sys, subprocess
 
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-U", "discord-py-interactions"])
+subprocess.check_call([sys.executable, "-m", "pip", "install", "-U","python-dotenv", "discord-py-interactions"])
 
 import interactions
 from dotenv import load_dotenv 
