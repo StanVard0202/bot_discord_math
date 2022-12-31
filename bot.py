@@ -12,8 +12,8 @@ load_dotenv()
 wp.set_lang("pt")
 
 TOKEN = os.getenv("TOKEN")
-PREFIXO_NORMAL = os.getenv("PREFIXO_NORMAL")
-PREFIXO_RPG = os.getenv("PREFIXO_RPG")
+PREFIXO_NORMAL = ":"
+PREFIXO_RPG = "?"
 GUILD_ID = int(os.getenv("GUILD_ID"))
 
 comprimento = len(PREFIXO_NORMAL)
