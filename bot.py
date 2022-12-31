@@ -1,5 +1,5 @@
-import os
-import sys, subprocess
+import os, sys, subprocess
+from commands import *
 
 subprocess.check_call([sys.executable, "-m", "pip", "install", "-U","python-dotenv", "discord-py-interactions"])
 subprocess.check_call([sys.executable, "-m", "pip", "install", "-U","wikipedia"])
@@ -7,6 +7,7 @@ subprocess.check_call([sys.executable, "-m", "pip", "install", "-U","wikipedia"]
 import interactions
 from dotenv import load_dotenv
 import wikipedia as wp
+
 load_dotenv()
 
 wp.set_lang("pt")
@@ -14,12 +15,13 @@ wp.set_lang("pt")
 TOKEN = os.getenv("TOKEN")
 PREFIXO_NORMAL = ":"
 PREFIXO_RPG = "?"
-GUILD_ID = int(os.getenv("GUILD_ID"))
+GUILD_ID = int(906962728533516319)
 
 comprimento = len(PREFIXO_NORMAL)
-clear_prefixed_lenth = len((PREFIXO_NORMAL + "clear"))
 
 client = interactions.Client(TOKEN, intents=interactions.Intents.DEFAULT | interactions.Intents.GUILD_MESSAGE_CONTENT)
+
+commands(interactions.CommandContext, client, GUILD_ID)
 
 #on ready
 @client.event
@@ -36,8 +38,8 @@ async def on_message_create(message):
 			await message.delete()
 			await channel.send(f'O bot está com uma latência de {(round(client.latency, 3)*1000)} ms')
 		
-		if message.content[comprimento: clear_prefixed_lenth] == "clear":
-			value = int(message.content[(clear_prefixed_lenth + 1): ])
+		if message.content[comprimento: (len((PREFIXO_NORMAL + "clear")))] == "clear":
+			value = int(message.content[(len((PREFIXO_NORMAL + "clear")) + 1): ])
 			channel = await message.get_channel()
 			await message.channel.purge(limit=(value + 1))
 			await channel.send(f'As mensagens foram limpas do {message.channel.name}')
@@ -50,19 +52,21 @@ async def on_message_create(message):
 		if (message.content[comprimento:(comprimento + len("realitas"))] == "realitas"):
 			channel = await message.get_channel()
 			content = message.content[(comprimento + len("realitas") + 1 ) : ]
-
 			await channel.send(wp.summary(str(content), sentences=1))
 			await message.delete()
+
+		if (message.content[comprimento:(comprimento + len("wikipedia"))] == "wikipedia"):
+			channel = await message.get_channel()
+			content = message.content[(comprimento + len("wikipedia") + 1 ) : ]
+			await channel.send(wp.summary(str(content), sentences=1))
+			await message.delete()
+
+
+
 	# Comandos com o prefixo de rpg ( ? )
 
 #Slash Commands
-@client.command(
-    name="ping",
-    description="Devolve a latência da api do bot",
-    scope=GUILD_ID
-)
-async def my_first_command(ctx: interactions.CommandContext):
-    await ctx.send(f'O bot está com uma latência de {(round(client.latency, 3)*1000)} ms')
+
 
 client.start()
 
