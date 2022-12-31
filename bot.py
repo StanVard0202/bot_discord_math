@@ -12,7 +12,7 @@ load_dotenv()
 
 wp.set_lang("pt")
 
-TOKEN = os.getenv("TOKEN")
+TOKEN = (os.getenv("TOKEN1") + os.getenv("TOKEN2"))
 PREFIXO_NORMAL = ":"
 PREFIXO_RPG = "?"
 GUILD_ID = int(906962728533516319)
