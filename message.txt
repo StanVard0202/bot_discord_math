@@ -1,7 +1,7 @@
 Comandos Gerais:
     #`ping` | Retorna a latência do bot
     #`realitas/wikipedia <assunto>`   | Pesquisa na Wikipédia sobre o <assunto>
-    #`veritatis <assunto>` | Pesquisa na Wiki do Ordem sobre o <assunto>
+    /////#`veritatis <assunto>` | Pesquisa na Wiki do Ordem sobre o <assunto>
     `conhecimento <assunto>` | Pesquisa nos fóruns da Wiki do Ordem sobre <assunto>
     #`energia ...` | Escolhe uma opção aleatória de todas enviadas (...)
     por enquanto só pensei nisso
@@ -18,8 +18,8 @@ Comandos de Cargo/Staff:
            `mente única <msg>` | Faz o bot Magistrado falar a <msg>, anonimamente.
            `compartilhar visões <ação>` | Se <ação> for lembrar, salve todas as msgs a seguir em uma tabela, até um limite de 25 msgs ser atingido ou o próprio usuário parar com a <ação> parar. Quando esse comando for utilizado com a <ação> compartilhar ou mostrar, todas as msgs que foram salvas serão mandadas de volta ao chat.
     Anfitrião :
-        (todos os comandos do anfitrião tem uma chance de não funcionar)
-        `dado de 100 <usuário>` | Rola um dado de 100 lados e muta o <úsuario> de uma forma diferente pelo tempo do resultado do dado de 100 lados, por exemplo, se cair 100, seria 100 segundos, se cair 50, 50 etc. Todas as mensagens da vítima nesse tempo serão excluídas, porém algumas podem se transformar em elogios ao anfitrião, como: "O Anfitrião é de fato o mais estupendo, maravilhoso, incrível, magnífico, perfeito, fantástico, sublime e impecável.".
+        ////////(todos os comandos do anfitrião tem uma chance de não funcionar)
+        #//#`dado de 100 <usuário>` | Rola um dado de 100 lados e muta o <úsuario> de uma forma diferente pelo tempo do resultado do dado de 100 lados, por exemplo, se cair 100, seria 100 segundos, se cair 50, 50 etc. Todas as mensagens da vítima nesse tempo serão excluídas, porém algumas podem se transformar em elogios ao anfitrião, como: "O Anfitrião é de fato o mais estupendo, maravilhoso, incrível, magnífico, perfeito, fantástico, sublime e impecável.".
         `memória falsa <msg> <...>` | Manda a msg para todos que o Anfitrião selecionar (<...>)
         `o sol <chat> <tempo>` | Impossibilita todos a ver o histórico do <chat> por <tempo> segundos.
         `anfiteatro <usúario> <txt>` | Força o <usúario> a falar <txt> no Anfiteatro e se não conseguir ou não falar por 10 segundos, é mutado por 1 minuto da mesma forma do mute do 'dado de 100'  
