@@ -3,16 +3,15 @@ import os, json
 import wikipedia as wp
 from dotenv import load_dotenv
 from random import randint
-
-load_dotenv()
 wp.set_lang("pt")
+load_dotenv()
 
 GUILD_IDS = json.loads(os.getenv("GUILD_ID"))
 
 class Slash_Commands(Extension):
     def __init__(self, bot):
         self.bot:Client = bot
-        print("Extention Created")
+        print("Extention 1 Created")
 
     @slash_command(
             name="energia",
@@ -27,7 +26,6 @@ class Slash_Commands(Extension):
          )
     async def energia(self, ctx: SlashContext, opcoes:str ):
         opcoes = opcoes.split(";")
-        print(opcoes)
         choice = randint(0,len(opcoes)-1)
         await ctx.send(f"A opção escolhida pela energia foi: {opcoes[choice]}")
 #-------------------------------------------------------------------------------------------------
@@ -69,9 +67,6 @@ class Slash_Commands(Extension):
          )
     async def ordem(self,ctx: SlashContext, assunto: str):
 	    await ctx.send("https://ordemparanormal.fandom.com/wiki/"+ str(assunto))
-         
-
 
 def setup(client):
     Slash_Commands(client)
-
