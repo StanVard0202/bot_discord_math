@@ -17,6 +17,9 @@ from random import randint
 from dotenv import load_dotenv
 from interactions.api.events import Component, MessageCreate, CommandError
 from interactions.ext.prefixed_commands import prefixed_command, PrefixedContext
+from exp import EXP as Exposicao
+
+EXP = Exposicao()
 
 load_dotenv()
 
@@ -37,8 +40,7 @@ client = interactions.Client(
     #sync_interactions=True,
     asyncio_debug=True,
     #logger=cls_log,
-    token=TOKEN
-)
+    token=TOKEN)
 
 @prefixed_command(name="my_command")
 async def my_command_function(ctx: PrefixedContext):
@@ -51,17 +53,15 @@ async def my_command_function(ctx: PrefixedContext):
 @interactions.listen()  
 async def on_ready():
     print("Ready")
-    print(client.application_commands)
+    #print(client.application_commands)
     print(f"This bot is owned by {client.owner}")
 
 @interactions.listen()
 async def on_message_create(event: MessageCreate):
     if event.message.author.id != client.user.id:
         print(f"message received: {event.message.content}")
-    
+        EXP.add(event.message.author,round(len(event.message.content)*0.1))
 
-
-    
 
 
 
@@ -72,13 +72,13 @@ async def prefix(client:interactions.Client, message:interactions.Message):
             return PREFIXO_STAFF
 
 
-butao_energia_component = 1
 
 
 
 client.load_extension("anfitriao")
 client.load_extension("component_helper")
 client.load_extension("app_commands")
+client.load_extension("deus_da_morte")
 prefixed_commands.setup(client, generate_prefixes=prefix)
 client.start()
 
