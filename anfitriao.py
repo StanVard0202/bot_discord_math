@@ -1,7 +1,7 @@
-from interactions import Extension, Client, slash_command, slash_option, OptionType, SlashContext, Permissions
+from interactions import Extension, Client, slash_command, slash_option, OptionType, SlashContext, Permissions, cooldown, Buckets
 from dotenv import load_dotenv
 from random import randint
-import json, os, interactions, time
+import json, os, interactions, time, asyncio
 from component_helper import Components
 from interactions.api.events import Component
 
@@ -124,30 +124,23 @@ class Anfitriao(Extension):
             name="sol",
             description="[Anfitrião]Inibe a utilizaçao do chat por 2d100 segundos", 
             scopes=GUILD_IDS)
-    @slash_option(
-        name="mensagem",
-        description="Mensagem a ser enviada",
-        required=True,
-        opt_type=OptionType.STRING)
-    async def sol(self, ctx:SlashContext, mensagem:str):
+    async def sol(self, ctx:SlashContext):
         if self.permission:
             tempo = randint(2,200)
-            ti = time.time()
-            ta = 0
-            await ctx.send(f"O SOL queimara por {tempo} segundos \n https://tenor.com/view/sun-waving-hi-hello-smiles-gif-15302254 ")
+            sol_msg = await ctx.send(f"O SOL queimara por {tempo} segundos \n https://tenor.com/view/sun-waving-hi-hello-smiles-gif-15302254 ")
             
             everyone_role = ctx.guild.get_role(ctx.guild.id)
 
-            while ta <= ti + tempo:
-                await ctx.channel.set_permission(everyone_role, send_messages=False,send_messages_in_threads=False)
-                ta = time.time()
-
+            await ctx.channel.set_permission(everyone_role, send_messages=False,send_messages_in_threads=False)
+            await asyncio.sleep(tempo)
+            print("des sol")
+            await sol_msg.delete()
             await ctx.channel.set_permission(everyone_role, send_messages=True,send_messages_in_threads=True)
             self.permission = False
         else:
             await ctx.send("Não possui o cargo nessesário", ephemeral=True)
     @sol.pre_run
-    async def command_pre_run(self, ctx:SlashContext, mensagem):
+    async def command_pre_run(self, ctx:SlashContext):
         if check_role(ctx,ctx.author,ROLE_ANFITRIAO):
             self.permission = True
 

@@ -63,6 +63,10 @@ class DeusDaMorte(Extension):
                     role = ctx.guild.get_role(role_id)
                     await channel.set_permission(ctx.guild.get_role(role),view_channel=True)
 
+                for role_id in ROLE_MANANCIAL:
+                    role = ctx.guild.get_role(role_id)
+                    await channel.set_permission(ctx.guild.get_role(role),view_channel=True)
+
                 await channel.send(f"Santo Berço invocado por {ctx.author.mention}")
                 await ctx.send(components=Components.santo_berco_user_list, ephemeral=True)
 
@@ -93,6 +97,10 @@ class DeusDaMorte(Extension):
                     role_manancial:Role = r
                     break
             exp_drenada = 0
+            manancial = [member for member in ctx.guild.members if member.has_role(role_manancial)]#Also doesnt work
+            print(role_manancial, manancial, role_manancial.members)
+            for i in ctx.guild.members:
+                print(i)
             for member in role_manancial.members:#FIXME nem eu sei pq é q isto n funciona
                 exp = EXP.check(member)
                 #EXP.remove(member,exp)
@@ -118,15 +126,12 @@ class DeusDaMorte(Extension):
         opt_type=OptionType.STRING,
         choices=[
             SlashCommandChoice("Cristal Verde", "verde"),
-            SlashCommandChoice("Cristal Preto", "preto")
-        ]
-    )
+            SlashCommandChoice("Cristal Preto", "preto")])
     @slash_option(
         name="user",
         description="Alvo do cristal",
         required=True,
-        opt_type=OptionType.USER
-    )
+        opt_type=OptionType.USER)
     async def cristais(self, ctx:SlashContext, tipo:str, user:Member | User):
         match tipo:
             case "verde":
@@ -143,8 +148,6 @@ class DeusDaMorte(Extension):
                 if exp_retirado != 0:
                     EXP.add(user,exp_retirado)
                     await ctx.send(f"Transferencia de {exp_retirado} ExP concluida")
-                    
-
 
             case "preto":
                 if EXP.check(ctx.author) >=10:
@@ -157,7 +160,8 @@ class DeusDaMorte(Extension):
                                     break
                             EXP.remove(ctx.author,10)
                             await user.add_role(role_manancial)
-                            await ctx.send(f"{user.mention} agora é um Manancial")
+                            #await ctx.send(f"{user.mention} agora é um Manancial")
+                            await ctx.send(f"{user.display_name} agora é um Manancial")
                         else:
                             await ctx.send(f"{user.mention} já é um Manancial")
                     else:

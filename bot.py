@@ -28,6 +28,9 @@ GUILD_IDS = json.loads(os.getenv("GUILD_ID"))
 PREFIXO_STAFF = ":"
 PREFIXO_RPG = "?"
 
+ROLE_DEUS_DA_MORTE:list[int] = json.loads(os.getenv("ROLE_DEUS_DA_MORTE"))
+ROLE_MANANCIAL:list[int] = json.loads(os.getenv("ROLE_MANANCIAL"))
+
 
 comprimento = len(PREFIXO_RPG)
 
@@ -36,7 +39,7 @@ cls_log = logging.getLogger("MyLogger")
 cls_log.setLevel(logging.DEBUG)
 
 client = interactions.Client(
-    intents=interactions.Intents.DEFAULT | interactions.Intents.MESSAGE_CONTENT,
+    intents=interactions.Intents.DEFAULT | interactions.Intents.MESSAGE_CONTENT | interactions.Intents.GUILD_MEMBERS,
     #sync_interactions=True,
     asyncio_debug=True,
     #logger=cls_log,
@@ -55,12 +58,31 @@ async def on_ready():
     print("Ready")
     #print(client.application_commands)
     print(f"This bot is owned by {client.owner}")
+    
 
 @interactions.listen()
 async def on_message_create(event: MessageCreate):
     if event.message.author.id != client.user.id:
         print(f"message received: {event.message.content}")
-        EXP.add(event.message.author,round(len(event.message.content)*0.1))
+        
+        for r_id in ROLE_MANANCIAL:
+            role_manancial = event.message.guild.get_role(r_id)
+            if role_manancial != None:
+                break
+        for r_id2 in ROLE_DEUS_DA_MORTE:
+            role_deus_da_morte = event.message.guild.get_role(r_id2)
+            if role_deus_da_morte != None:
+                break
+
+        deus_da_morte = role_deus_da_morte.members
+        if role_manancial in event.message.author.roles:
+            EXP.add(event.message.author,round(len(event.message.content)*0.4))
+            for i in deus_da_morte:
+                EXP.add(i,round(len(event.message.content)*0.2))
+        elif event.message.author in deus_da_morte:
+            EXP.add(event.message.author,round(len(event.message.content)*0.1))
+        else:
+            EXP.add(event.message.author,round(len(event.message.content)*0.6))
 
 
 
@@ -79,6 +101,7 @@ client.load_extension("anfitriao")
 client.load_extension("component_helper")
 client.load_extension("app_commands")
 client.load_extension("deus_da_morte")
+client.load_extension("magistrado")
 prefixed_commands.setup(client, generate_prefixes=prefix)
 client.start()
 
