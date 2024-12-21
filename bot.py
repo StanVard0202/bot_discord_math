@@ -1,6 +1,5 @@
 import os, sys, subprocess
-from energia import *
-
+from interactions.ext import prefixed_commands
 state = False
 
 packages = ["python-dotenv", "discord-py-interactions", "wikipedia"]
@@ -12,20 +11,25 @@ for i in packages:
 
 
 
-import interactions, logging
+import interactions, logging, json
 from dotenv import load_dotenv
 from random import randint
+from dotenv import load_dotenv
+from interactions.api.events import Component, MessageCreate, CommandError
+from interactions.ext.prefixed_commands import prefixed_command, PrefixedContext
+from exp import EXP as Exposicao
 
-from interactions.api.events import Component
-from interactions.ext import prefixed_commands
+EXP = Exposicao()
 
 load_dotenv()
 
-
-
 TOKEN = (os.getenv("TOKEN1") + os.getenv("TOKEN2"))
+GUILD_IDS = json.loads(os.getenv("GUILD_ID"))
 PREFIXO_STAFF = ":"
 PREFIXO_RPG = "?"
+
+ROLE_DEUS_DA_MORTE:list[int] = json.loads(os.getenv("ROLE_DEUS_DA_MORTE"))
+ROLE_MANANCIAL:list[int] = json.loads(os.getenv("ROLE_MANANCIAL"))
 
 
 comprimento = len(PREFIXO_RPG)
@@ -35,40 +39,70 @@ cls_log = logging.getLogger("MyLogger")
 cls_log.setLevel(logging.DEBUG)
 
 client = interactions.Client(
-    intents=interactions.Intents.DEFAULT | interactions.Intents.MESSAGE_CONTENT,
+    intents=interactions.Intents.DEFAULT | interactions.Intents.MESSAGE_CONTENT | interactions.Intents.GUILD_MEMBERS,
     #sync_interactions=True,
     asyncio_debug=True,
     #logger=cls_log,
-    token=TOKEN
-)
+    token=TOKEN)
+
+@prefixed_command(name="my_command")
+async def my_command_function(ctx: PrefixedContext):
+    await ctx.message.delete()
+    await ctx.send("Hello world!")
+
+
+
 
 @interactions.listen()  
 async def on_ready():
     print("Ready")
-    print(client.application_commands)
+    #print(client.application_commands)
     print(f"This bot is owned by {client.owner}")
+    
 
 @interactions.listen()
-async def on_message_create(event: interactions.api.events.MessageCreate):
+async def on_message_create(event: MessageCreate):
     if event.message.author.id != client.user.id:
         print(f"message received: {event.message.content}")
-    
+        
+        for r_id in ROLE_MANANCIAL:
+            role_manancial = event.message.guild.get_role(r_id)
+            if role_manancial != None:
+                break
+        for r_id2 in ROLE_DEUS_DA_MORTE:
+            role_deus_da_morte = event.message.guild.get_role(r_id2)
+            if role_deus_da_morte != None:
+                break
+
+        deus_da_morte = role_deus_da_morte.members
+        if role_manancial in event.message.author.roles:
+            EXP.add(event.message.author,round(len(event.message.content)*0.4))
+            for i in deus_da_morte:
+                EXP.add(i,round(len(event.message.content)*0.2))
+        elif event.message.author in deus_da_morte:
+            EXP.add(event.message.author,round(len(event.message.content)*0.1))
+        else:
+            EXP.add(event.message.author,round(len(event.message.content)*0.6))
 
 
-@interactions.listen()
-async def on_component(event: Component):
-    ctx = event.ctx
-    await ctx.edit_origin(content="test") #TODO ver a necessidade disto
-    
-@interactions.listen()
-async def on_command_error(event: interactions.api.events.CommandError):
-    print(event)#TODO melhorar este handling
+
+
+
+
+async def prefix(client:interactions.Client, message:interactions.Message):
+      if message.guild.id in GUILD_IDS:
+            return PREFIXO_STAFF
 
 
 
 
 
+client.load_extension("anfitriao")
+client.load_extension("component_helper")
 client.load_extension("app_commands")
+client.load_extension("deus_da_morte")
+client.load_extension("magistrado")
+prefixed_commands.setup(client, generate_prefixes=prefix)
 client.start()
 
 

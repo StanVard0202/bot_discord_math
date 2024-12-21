@@ -1,22 +1,43 @@
 from interactions import *
+import interactions
 import os, json
 import wikipedia as wp
 from dotenv import load_dotenv
 from random import randint
+from exp import EXP as Exposicao
 
-load_dotenv()
+EXP = Exposicao()
+
 wp.set_lang("pt")
+load_dotenv()
 
 GUILD_IDS = json.loads(os.getenv("GUILD_ID"))
 
 class Slash_Commands(Extension):
     def __init__(self, bot):
         self.bot:Client = bot
-        print("Extention Created")
+        print("App Commands loaded")
 
     @slash_command(
+            name="exp",
+            description="[Geral]Verifica a Exposição Paranormal de um usuario", 
+            scopes=GUILD_IDS)
+    @slash_option(
+         name="user",
+         description="Usuario",
+         required=True,
+         opt_type=OptionType.USER)
+    async def exp(self, ctx: SlashContext, user:interactions.models.discord.user.Member ):
+        if EXP.check(user) == False:
+            EXP.add_user(user)
+            await ctx.send(f"{user.mention} não tem Exposição Paranormal")
+        else:
+            await ctx.send(f"{user.mention} tem {EXP.check(user)} Exposição Paranormal")
+            
+#-------------------------------------------------------------------------------------------------
+    @slash_command(
             name="energia",
-            description="Escolhe uma opção aleatória detre as enviadas(separadas por ;)", 
+            description="[Geral]Escolhe uma opção aleatória detre as enviadas(separadas por ;)", 
             scopes=GUILD_IDS
             )
     @slash_option(
@@ -27,7 +48,6 @@ class Slash_Commands(Extension):
          )
     async def energia(self, ctx: SlashContext, opcoes:str ):
         opcoes = opcoes.split(";")
-        print(opcoes)
         choice = randint(0,len(opcoes)-1)
         await ctx.send(f"A opção escolhida pela energia foi: {opcoes[choice]}")
 #-------------------------------------------------------------------------------------------------
@@ -41,7 +61,7 @@ class Slash_Commands(Extension):
 #-------------------------------------------------------------------------------------------------
     @slash_command(
               name="realitas",
-              description="Pesquisa na Wikipédia sobre o assunto", 
+              description="[Geral]Pesquisa na Wikipédia sobre o assunto", 
               scopes=GUILD_IDS
               )
     @slash_option(
@@ -58,7 +78,7 @@ class Slash_Commands(Extension):
 #-------------------------------------------------------------------------------------------------
     @slash_command(
               name="veritatis",
-              description="Pesquisa na Wiki do Ordem sobre o assunto",
+              description="[Geral]Pesquisa na Wiki do Ordem sobre o assunto",
               scopes=GUILD_IDS
               )
     @slash_option(
@@ -69,9 +89,9 @@ class Slash_Commands(Extension):
          )
     async def ordem(self,ctx: SlashContext, assunto: str):
 	    await ctx.send("https://ordemparanormal.fandom.com/wiki/"+ str(assunto))
-         
+#-------------------------------------------------------------------------------------------------
+    
 
 
 def setup(client):
     Slash_Commands(client)
-
