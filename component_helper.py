@@ -55,6 +55,11 @@ class Components():
     
     santo_berco_channel:GuildText = None
 
+    mente_unica_input = Modal(
+        ShortText(label="Mensagem desejada", custom_id="mente_unica_input"),
+        title="Mente Unica",
+    )
+
     
 
 def setup(client):

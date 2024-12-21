@@ -160,8 +160,7 @@ class DeusDaMorte(Extension):
                                     break
                             EXP.remove(ctx.author,10)
                             await user.add_role(role_manancial)
-                            #await ctx.send(f"{user.mention} agora é um Manancial")
-                            await ctx.send(f"{user.display_name} agora é um Manancial")
+                            await ctx.send(f"{user.mention} agora é um Manancial")
                         else:
                             await ctx.send(f"{user.mention} já é um Manancial")
                     else:

@@ -26,7 +26,7 @@ class Magistrado(Extension):
         self.permission = False
         self.role_preso:Role = None
         print("magistrado loaded")
-    @slash_command(
+    @slash_command(#TODO Testar
         name="vazio_desespero",
         description="[Magistrado]Puxa o <usuário> para o Vazio do Desespero",
         scopes=GUILD_IDS)
@@ -57,6 +57,7 @@ class Magistrado(Extension):
                 await asyncio.sleep(20)
                 await self.vazio_channel.delete()
                 self.vazio_channel = None
+            self.permission = False
         else:
             await ctx.send("Não possui o cargo nessesário", ephemeral=True)
     @vazio.pre_run
@@ -137,7 +138,7 @@ class Magistrado(Extension):
                 await asyncio.sleep(20)
                 await self.vazio_channel.delete()
                 self.vazio_channel = None
-                    
+            self.permission = False
         else:
             await ctx.send("Não possui o cargo nessesário", ephemeral=True)
     @prisao.pre_run
@@ -153,16 +154,85 @@ class Magistrado(Extension):
         name="mensagem",
         description="ID da mensagem a ser apagada",
         required=True,
-        opt_type=OptionType.INTEGER,
+        opt_type=OptionType.STRING,
         argument_name="msg")
-    async def ocultar(self, ctx:SlashContext, msg:int):
+    async def ocultar(self, ctx:SlashContext, msg):
+        msg = int(msg)
         if self.permission:
-            message = ctx.channel.get_message(msg)
+            message = await ctx.channel.fetch_message(msg)
             await message.delete()
-            await ctx.send(f"A mensagem '{message.content}' de {message.author} foi apagada", ephemeral=True)
+            await ctx.send(f"A mensagem '{message.content}' de {message.author.display_name} foi apagada", ephemeral=True)
+            self.permission = False
         else:
             await ctx.send("Não possui o cargo nessesário", ephemeral=True)
     @ocultar.pre_run
-    async def command_pre_run(self, ctx:SlashContext, msg):
+    async def command_pre_run(self, ctx:SlashContext, mensagem):
         if check_role(ctx,ctx.author,ROLE_MAGISTRADO):
+            self.permission = True
+#-------------------------------------------------------------------------------------------------
+    @slash_command(
+        name="teleporte_das_sombras",
+        description="[Magistrado e Mascaras]Muda a posição do <usuário> em canais de voz para <canal>.",
+        scopes=GUILD_IDS)
+    @slash_option(
+        name="usuario",
+        description="A ser transferido",
+        required=True,
+        opt_type=OptionType.USER)
+    @slash_option(
+        name="canal",
+        description="Alvo do teleporte",
+        required=True,
+        opt_type=OptionType.CHANNEL,
+        channel_types=[ChannelType.GUILD_VOICE])
+    async def teleporte(self, ctx:SlashContext, usuario:User|Member, canal:GuildVoice):
+        if self.permission:
+            for role_id in ROLE_MAGISTRADO:
+                r = ctx.guild.get_role(role_id)
+                if ctx.guild.get_role(role_id) != None:
+                    role_magistrado:Role = r
+                    break
+            if usuario in role_magistrado.members:
+                await ctx.send("Não pode usar este comando no Magistrado", ephemeral=True)
+            else:
+                if usuario.voice:
+                    await usuario.edit(channel_id=canal.id)
+                else:
+                    await ctx.send(f"{usuario.display_name} não está num canal de voz", ephemeral=True)
+            self.permission = False
+        else:
+            await ctx.send("Não possui o cargo nessesário", ephemeral=True)
+    @teleporte.pre_run
+    async def command_pre_run(self, ctx:SlashContext, usuario, canal):
+        if check_role(ctx,ctx.author,ROLE_MAGISTRADO) | check_role(ctx,ctx.author,ROLE_MASCARA):
+            self.permission = True
+#-------------------------------------------------------------------------------------------------
+    @slash_command(
+        name="mente_unica",
+        description="[Magistrado e Mascaras]Faz o bot falar a <msg>, anonimamente",
+        scopes=GUILD_IDS)
+    @slash_option(
+        name="mensagem",
+        description="Mensagem a ser apresemtada",
+        required=True,
+        opt_type=OptionType.STRING,
+        argument_name="msg")
+    @slash_option(
+        name="canal",
+        description="Para onde a mensagem deve ser mandada(se for o mesmo donde foi enviado deixar vazio)",
+        required=False,
+        opt_type=OptionType.CHANNEL)
+    async def mente(self, ctx:SlashContext, msg:str, canal:GuildVoice | GuildText=None):
+        if self.permission:
+            if canal is None:
+                await ctx.channel.send(msg)
+            else:
+                await canal.send(msg)
+            await ctx.send(f"Enviado '{msg}'", ephemeral=True)
+            self.permission = False
+        else:
+            await ctx.send("Não possui o cargo nessesário", ephemeral=True)
+    @mente.pre_run
+    async def command_pre_run(self, ctx:SlashContext, mensagem:str, canal=None):
+        if check_role(ctx,ctx.author,ROLE_MAGISTRADO) | check_role(ctx,ctx.author,ROLE_MASCARA):
             self.permission = True
