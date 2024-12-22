@@ -14,23 +14,24 @@ for i in packages:
 import interactions, logging, json
 from dotenv import load_dotenv
 from random import randint
-from dotenv import load_dotenv
 from interactions.api.events import Component, MessageCreate, CommandError
 from interactions.ext.prefixed_commands import prefixed_command, PrefixedContext
-from exp import EXP as Exposicao
+from modules.exp import EXP as Exposicao
 
 EXP = Exposicao()
 
-load_dotenv()
+load_dotenv("./modules/.env")
 
 TOKEN = (os.getenv("TOKEN1") + os.getenv("TOKEN2"))
-GUILD_IDS = json.loads(os.getenv("GUILD_ID"))
 PREFIXO_STAFF = ":"
 PREFIXO_RPG = "?"
 
-ROLE_DEUS_DA_MORTE:list[int] = json.loads(os.getenv("ROLE_DEUS_DA_MORTE"))
-ROLE_MANANCIAL:list[int] = json.loads(os.getenv("ROLE_MANANCIAL"))
 
+with open("id.json","r") as f:
+    ids:dict = json.load(f)
+    GUILD_IDS:list[int] = ids["GUILD_ID"]
+    ROLE_DEUS_DA_MORTE:list[int] = ids["ROLE_DEUS_DA_MORTE"]
+    ROLE_MANANCIAL:list[int] = ids["ROLE_MANANCIAL"]
 
 comprimento = len(PREFIXO_RPG)
 
@@ -73,16 +74,18 @@ async def on_message_create(event: MessageCreate):
             role_deus_da_morte = event.message.guild.get_role(r_id2)
             if role_deus_da_morte != None:
                 break
-
         deus_da_morte = role_deus_da_morte.members
         if role_manancial in event.message.author.roles:
             EXP.add(event.message.author,round(len(event.message.content)*0.4))
             for i in deus_da_morte:
                 EXP.add(i,round(len(event.message.content)*0.2))
-        elif event.message.author in deus_da_morte:
+            #print("manancial")
+        elif role_deus_da_morte in event.message.author.roles:
             EXP.add(event.message.author,round(len(event.message.content)*0.1))
+            #print("deus da morte")
         else:
             EXP.add(event.message.author,round(len(event.message.content)*0.6))
+            #print("peasent")
 
 
 
@@ -95,14 +98,12 @@ async def prefix(client:interactions.Client, message:interactions.Message):
 
 
 
-
-
-client.load_extension("anfitriao")
-client.load_extension("component_helper")
-client.load_extension("app_commands")
-client.load_extension("deus_da_morte")
-client.load_extension("magistrado")
-prefixed_commands.setup(client, generate_prefixes=prefix)
+client.load_extension("modules.anfitriao")
+client.load_extension("modules.component_helper")
+client.load_extension("modules.app_commands")
+client.load_extension("modules.deus_da_morte")
+client.load_extension("modules.magistrado")
+#prefixed_commands.setup(client, generate_prefixes=prefix)
 client.start()
 
 
