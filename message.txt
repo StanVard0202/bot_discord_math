@@ -1,0 +1,38 @@
+Comandos Gerais:
+    `ping` | Retorna a latência do bot
+    `realitas/wikipedia <assunto>`   | Pesquisa na Wikipédia sobre o <assunto>
+    `veritatis <assunto>` | Pesquisa na Wiki do Ordem sobre o <assunto>
+    `conhecimento <assunto>` | Pesquisa nos fóruns da Wiki do Ordem sobre <assunto>
+    `energia ...` | Escolhe uma opção aleatória de todas enviadas (...)
+    por enquanto só pensei nisso
+Comandos de Cargo/Staff:
+    Magistrado :
+        `vazio do desespero <usuário>` | Puxa o <usuário> para o Vazio do Desespero, apagando tudo o que existia no canal antes do fato, para liberar alguém, é só preciso utilizar o Vazio do Desespero na pessoa de novo
+        `prisão das sombras <usuário> <tempo>` | Puxa o <usuário> para o Vazio do Desespero, apagando tudo o que existia no canal antes do fato e não permitindo a pessoa a falar, presa ao canal por <tempo> ou até ser utilizado de novo nesse mesmo <usuário> o comando. (caso <tempo> seja 0, ela ficará lá infinitamente até que alguém tire.)
+        `ocultar lembranças <msg>` | Apaga uma <msg> para sempre, ou então, se <msg> for um número, apaga do conhecimento do passado a mensagem que está -<msg> da última mensagem. 
+        `criação <item>` | (Aviso: esse envolve os comandos de rpg, e não deve ser feito agora) Cria um <item> específico de uma tabela de itens criáveis e coloca no inventário do usuário. 
+        `suplantar energia <tempo (0->30)>` | Incapacita o Anfitrião e sua produção por <tempo>.
+        Máscara:
+           `teleporte das sombras <usuário> <canal>` | Muda a posição do <usuário> em canais de voz para <canal>.
+           `conhecimento do passado` | Retorna o histórico de todas as mensagens apagadas em um tempo de 1 mês. 
+           `mente única <msg>` | Faz o bot Magistrado falar a <msg>, anonimamente.
+           `compartilhar visões <ação>` | Se <ação> for lembrar, salve todas as msgs a seguir em uma tabela, até um limite de 25 msgs ser atingido ou o próprio usuário parar com a <ação> parar. Quando esse comando for utilizado com a <ação> compartilhar ou mostrar, todas as msgs que foram salvas serão mandadas de volta ao chat.
+    Anfitrião :
+        ////////(todos os comandos do anfitrião tem uma chance de não funcionar)
+        `dado de 100 <usuário>` | Rola um dado de 100 lados e muta o <úsuario> de uma forma diferente pelo tempo do resultado do dado de 100 lados, por exemplo, se cair 100, seria 100 segundos, se cair 50, 50 etc. Todas as mensagens da vítima nesse tempo serão excluídas, porém algumas podem se transformar em elogios ao anfitrião, como: "O Anfitrião é de fato o mais estupendo, maravilhoso, incrível, magnífico, perfeito, fantástico, sublime e impecável.".
+        `memória falsa <msg> <...>` | Manda a msg para todos que o Anfitrião selecionar (<...>)
+        `o sol <chat> <tempo>` | Impossibilita todos a ver o histórico do <chat> por <tempo> segundos.
+        `anfiteatro <usúario> <txt>` | Força o <usúario> a falar <txt> no Anfiteatro e se não conseguir ou não falar por 10 segundos, é mutado por 1 minuto da mesma forma do mute do 'dado de 100'  
+        `suplantar morte <tempo (0->30)>` | Incapacita o Deus da Morte e seus mananciais por <tempo>.
+        Produção:
+           `tradição de família` | Retorna um número aleatório entre 0 e 10 pessoas aleatórias do server.
+           `troca troca <usúario 1> <usuário 2>` | Troca os usuários de lugar se estiverem em canais de voz.
+           `intangibilidade <usuário>` | Impossibilita os outros cargos da calamidade (menos conhecimento)  tomar ações contra o <usúario> por 30 segundos.
+           `botão <...>` | Um botão aparece, e logo em seguida os primeiros a apertar aparecem no chat.
+    Deus da Morte:
+        `drenar mananciais` | Drena o ExP de todos os mananciais.
+        `distorção temporal` | Coloca ou remove slow-mode de um canal.
+        `cristais <tipo> <usúario>` | Se o <tipo> = verde, dá ExP para o <usuário, ao custo de seu próprio, se o <tipo> = preto, transforma o <usuário> em um manancial ao custo de ExP.
+        `time-lock <usúario> <chat>` | Coloca o <usúario> em uma cópia do <chat> onde só ele está.
+        `santo berço <...>` | Cria uma sala chamada Santo Berço e coloca todos especificados nela. (<...>)
+        `suplantar sangue` | Incapacita o Diabo e seus herdeiros por <tempo>.
