@@ -22,7 +22,7 @@ EXP = Exposicao()
 
 load_dotenv("./modules/.env")
 
-TOKEN = (os.getenv("TOKEN1") + os.getenv("TOKEN2"))
+TOKEN = os.getenv("TOKEN")
 PREFIXO_STAFF = ":"
 PREFIXO_RPG = "?"
 
