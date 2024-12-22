@@ -1,12 +1,14 @@
 import interactions, time, json, os, asyncio
-from modules.component_helper import Components
+from dotenv import load_dotenv
+from component_helper import Components
 from interactions import *
 
-with open("id.json","r") as f:
-    ids:dict = json.load(f)
-    GUILD_IDS:list[int] = ids["GUILD_ID"]
-    ROLE_MAGISTRADO:list[int] = ids["ROLE_MAGISTRADO"]
-    ROLE_MASCARA:list[int] = ids["ROLE_MASCARA"]
+load_dotenv()
+
+GUILD_IDS:list[int] = json.loads(os.getenv("GUILD_ID"))
+ROLE_MAGISTRADO:list[int] = json.loads(os.getenv("ROLE_MAGISTRADO"))
+ROLE_MASCARA:list[int] = json.loads(os.getenv("ROLE_MASCARA"))
+#falta setup
 
 def check_role(ctx:SlashContext,user:interactions.models.discord.user.Member, roles:list):
     for role_id in roles:
@@ -24,7 +26,7 @@ class Magistrado(Extension):
         self.permission = False
         self.role_preso:Role = None
         print("magistrado loaded")
-    @slash_command(#TODO Testar1
+    @slash_command(#TODO Testar
         name="vazio_desespero",
         description="[Magistrado]Puxa o <usuário> para o Vazio do Desespero",
         scopes=GUILD_IDS)
@@ -63,7 +65,7 @@ class Magistrado(Extension):
         if check_role(ctx,ctx.author,ROLE_MAGISTRADO):
             self.permission = True
 #-------------------------------------------------------------------------------------------------
-    @slash_command(#TODO Testar2
+    @slash_command(#TODO Testar
         name="prisao_sombras",
         description="[Magistrado]Leva o <usuário> para Vazio do Desespero, impedindo que veja outros canais por <tempo>",
         scopes=GUILD_IDS)
@@ -234,6 +236,3 @@ class Magistrado(Extension):
     async def command_pre_run(self, ctx:SlashContext, mensagem:str, canal=None):
         if check_role(ctx,ctx.author,ROLE_MAGISTRADO) | check_role(ctx,ctx.author,ROLE_MASCARA):
             self.permission = True
-
-def setup(client):
-    Magistrado(client)
