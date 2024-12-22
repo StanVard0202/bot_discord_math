@@ -2,16 +2,16 @@ from interactions import *
 import interactions
 import os, json
 import wikipedia as wp
+from dotenv import load_dotenv
 from random import randint
-from modules.exp import EXP as Exposicao
+from exp import EXP as Exposicao
 
 EXP = Exposicao()
 
 wp.set_lang("pt")
+load_dotenv()
 
-with open("id.json","r") as f:
-    ids:dict = json.load(f)
-    GUILD_IDS:list[int] = ids["GUILD_ID"]
+GUILD_IDS = json.loads(os.getenv("GUILD_ID"))
 
 class Slash_Commands(Extension):
     def __init__(self, bot):
