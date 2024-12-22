@@ -1,17 +1,15 @@
 from interactions import Extension, Client, slash_command, slash_option, OptionType, SlashContext, Permissions, cooldown, Buckets
+from dotenv import load_dotenv
 from random import randint
 import json, os, interactions, time, asyncio
-from modules.component_helper import Components
+from component_helper import Components
 from interactions.api.events import Component
 
+load_dotenv()
 
-
-with open("id.json","r") as f:
-    ids:dict = json.load(f)
-    GUILD_IDS:list[int] = ids["GUILD_ID"]
-    ROLE_ANFITRIAO:list[int] = ids["ROLE_ANFITRIAO"]
-    ROLE_PRODUCAO:list[int] = ids["ROLE_PRODUCAO"]
-
+GUILD_IDS:list[int] = json.loads(os.getenv("GUILD_ID"))
+ROLE_ANFITRIAO:list[int] = json.loads(os.getenv("ROLE_ANFITRIAO"))
+ROLE_PRODUCAO:list[int] = json.loads(os.getenv("ROLE_PRODUCAO"))
 
 def check_role(ctx:SlashContext,user:interactions.models.discord.user.Member, roles:list):
     for role_id in roles:

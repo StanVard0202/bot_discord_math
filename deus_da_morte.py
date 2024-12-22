@@ -1,16 +1,16 @@
 from interactions import *
 import interactions, time, json, os
-from modules.component_helper import Components
-from modules.exp import EXP as Exposicao
+from dotenv import load_dotenv
+from component_helper import Components
+from exp import EXP as Exposicao
 
 EXP = Exposicao()
 
+load_dotenv()
 
-with open("id.json","r") as f:
-    ids:dict = json.load(f)
-    GUILD_IDS:list[int] = ids["GUILD_ID"]
-    ROLE_DEUS_DA_MORTE:list[int] = ids["ROLE_DEUS_DA_MORTE"]
-    ROLE_MANANCIAL:list[int] = ids["ROLE_MANANCIAL"]
+GUILD_IDS:list[int] = json.loads(os.getenv("GUILD_ID"))
+ROLE_DEUS_DA_MORTE:list[int] = json.loads(os.getenv("ROLE_DEUS_DA_MORTE"))
+ROLE_MANANCIAL:list[int] = json.loads(os.getenv("ROLE_MANANCIAL"))
 
 def check_role(ctx:SlashContext,user:interactions.models.discord.user.Member, roles:list):
     for role_id in roles:
@@ -117,7 +117,7 @@ class DeusDaMorte(Extension):
 #-------------------------------------------------------------------------------------------------
     @slash_command(
             name="cristais",
-            description="[Deus Da Morte]Se for verde, dá ExP ao <user> do próprio, se for preto, transforma-o num manancial",
+            description="Se o <tipo>=verde, dá ExP ao <user> do próprio, se o <tipo>=preto, transforma o <user> num manancial",
             scopes=GUILD_IDS)
     @slash_option(
         name="tipo",
