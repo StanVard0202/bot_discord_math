@@ -52,14 +52,6 @@ class Slash_Commands(Extension):
         await ctx.send(f"A opção escolhida pela energia foi: {opcoes[choice]}")
 #-------------------------------------------------------------------------------------------------
     @slash_command(
-              name="ping",
-              description="latency", 
-              scopes=GUILD_IDS
-              )
-    async def ping(self, ctx : SlashContext):
-        await ctx.send(f'O bot está com uma latência de {round(self.bot.latency, 3)} ms')
-#-------------------------------------------------------------------------------------------------
-    @slash_command(
               name="realitas",
               description="[Geral]Pesquisa na Wikipédia sobre o assunto", 
               scopes=GUILD_IDS
